@@ -1,0 +1,7 @@
+Widget variables are declared into the Widget class
+of stateful widget
+And state variables are declared into the State class
+of that stateful widget
+
+the widget variable is accessed in the state class
+using "widget.variable_name"

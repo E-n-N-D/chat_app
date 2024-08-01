@@ -11,9 +11,10 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter chat app', // shows at the tabbar on web
-      home: ChatPage()
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      home: const ChatPage()
     );
   }
 }
