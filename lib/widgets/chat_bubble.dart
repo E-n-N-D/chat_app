@@ -1,15 +1,19 @@
+import 'package:chat_app/models/message_entity.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
-  final String message;
+  final MessageEntity messageEntity;
   final Alignment alignment;
-  const ChatBubble({super.key, required this.alignment, required this.message});
+  const ChatBubble(
+      {super.key, required this.alignment, required this.messageEntity});
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: alignment,
       child: Container(
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.5),
         margin: const EdgeInsets.all(50),
         padding: const EdgeInsets.all(24),
         decoration: const BoxDecoration(
@@ -21,11 +25,12 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('$message'),
-            Image.network(
-              'https://i.imgur.com/eCYK8td.jpeg',
-              height: 100,
-            )
+            Text(messageEntity.text),
+            if (messageEntity.imageUrl != null)
+              Image.network(
+                messageEntity.imageUrl!,
+                height: 100,
+              )
           ],
         ),
       ),

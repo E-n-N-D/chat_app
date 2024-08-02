@@ -1,18 +1,26 @@
+import 'package:chat_app/utils/spaces.dart';
+import 'package:chat_app/widgets/login_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media_buttons/social_media_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   final _formkey = GlobalKey<FormState>();
 
-  void loginUser() {
+  void loginUser(context) {
     if (_formkey.currentState != null && _formkey.currentState!.validate()) {
+      Navigator.pushReplacementNamed(context, 'chat',
+          arguments: usernameController.text);
       print('Login Successful!');
     } else {
       print("Login not successful!");
     }
   }
 
+  static const url = 'https://github.com/E-n-N-D';
+  final Uri uri = Uri.parse(url);
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -43,7 +51,7 @@ class LoginPage extends StatelessWidget {
                     fontSize: 20,
                     color: Colors.blueGrey),
               ),
-              Image.network('https://i.imgur.com/eCYK8td.jpeg', height: 100),
+              Image.asset('assets/banner_image.png', height: 100),
               const SizedBox(
                 height: 20,
               ),
@@ -51,9 +59,11 @@ class LoginPage extends StatelessWidget {
                 key: _formkey,
                 child: Column(
                   children: [
-                    TextFormField(
+                    LoginTextField(
                       validator: (value) {
-                        if (value != null && value.isNotEmpty && value.length < 5) {
+                        if (value != null &&
+                            value.isNotEmpty &&
+                            value.length < 5) {
                           return "Your username should bemore than 5 characters!";
                         } else if (value == null || value.isEmpty) {
                           return "Please type your username!";
@@ -61,17 +71,15 @@ class LoginPage extends StatelessWidget {
                         return null;
                       },
                       controller: usernameController,
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Your username',
-                          hintStyle: TextStyle(color: Colors.blueGrey)),
+                      hintText: 'Your username',
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
+                    verticalSpacing(24),
+                    LoginTextField(
+                      isSecured: true,
                       validator: (value) {
-                        if (value != null && value.isNotEmpty && value.length < 8) {
+                        if (value != null &&
+                            value.isNotEmpty &&
+                            value.length < 8) {
                           return "Your password does not match!";
                         } else if (value == null || value.isEmpty) {
                           return "Please type your password!";
@@ -79,20 +87,16 @@ class LoginPage extends StatelessWidget {
                         return null;
                       },
                       controller: passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Your password',
-                          hintStyle: TextStyle(color: Colors.blueGrey)),
+                      hintText: 'Your password',
                     ),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              verticalSpacing(24),
               ElevatedButton(
-                  onPressed: loginUser,
+                  onPressed: () {
+                    loginUser(context);
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       shape: const RoundedRectangleBorder(
@@ -105,15 +109,22 @@ class LoginPage extends StatelessWidget {
                         color: Colors.white),
                   )),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   print('Link clicked');
+                  if (!await launchUrl(uri)) {
+                    throw 'Could not launch this!';
+                  }
                 },
                 child: const Column(
-                  children: [
-                    Text('Find me on'),
-                    Text('https://github.com/E-n-N-D')
-                  ],
+                  children: [Text('Find me on'), Text(url)],
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SocialMediaButton.github(url:url),
+                  SocialMediaButton.linkedin(url:'https://www.linkedin.com/in/sushant-adhikari-684647206/')
+                ],
               )
             ],
           ),

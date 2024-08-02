@@ -1,0 +1,27 @@
+[
+    {
+        "text":"Hi! This is Sushant.",
+        "id":"1",
+        "createdAt":1,
+        "author":{
+            "username":"Sushant"
+        }
+    },
+    {
+        "text":"Hi Sushant! How are you?",
+        "id":"2",
+        "createdAt":2,
+        "author":{
+            "username":"Dove"
+        }
+    },
+    {
+        "text":"I am doing fine.",
+        "id":"1",
+        "createdAt":3,
+        "imageUrl":"https://i.imgur.com/z4COy8v.jpeg",
+        "author":{
+            "username":"Sushant"
+        }
+    }
+]
