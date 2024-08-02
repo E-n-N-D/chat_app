@@ -1,18 +1,21 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/utils/spaces.dart';
 import 'package:chat_app/widgets/login_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_buttons/social_media_button.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   final _formkey = GlobalKey<FormState>();
 
-  void loginUser(context) {
+  Future<void> loginUser(BuildContext context) async {
     if (_formkey.currentState != null && _formkey.currentState!.validate()) {
-      Navigator.pushReplacementNamed(context, 'chat',
-          arguments: usernameController.text);
+      await context.read<AuthService>().loginUser(usernameController.text);
+
+      Navigator.pushReplacementNamed(context, 'chat');
       print('Login Successful!');
     } else {
       print("Login not successful!");
@@ -57,7 +60,6 @@ class LoginPage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      fit: BoxFit.fitWidth,
                       image: AssetImage('assets/banner_image.png'),
                     ),
                     borderRadius: BorderRadius.circular(24)),
@@ -104,8 +106,8 @@ class LoginPage extends StatelessWidget {
               ),
               verticalSpacing(24),
               ElevatedButton(
-                  onPressed: () {
-                    loginUser(context);
+                  onPressed: () async {
+                    await loginUser(context);
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,

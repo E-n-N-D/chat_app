@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:chat_app/models/message_entity.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/chat_bubble.dart';
 import 'package:chat_app/widgets/chat_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   ChatPage({super.key});
@@ -34,7 +36,6 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {});
   }
 
-
   @override
   void initState() {
     _loadInitialMessages();
@@ -43,8 +44,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)!.settings.arguments;
-    final username = arguments != null ? arguments as String : 'Sushant';
+    final username = context.watch<AuthService>().getUserName();
     return Scaffold(
         appBar: AppBar(
           title: Text('Hi $username'),
@@ -52,6 +52,12 @@ class _ChatPageState extends State<ChatPage> {
           actions: [
             IconButton(
                 onPressed: () {
+                  context.read<AuthService>().updateUserName('Hero');
+                },
+                icon: const Icon(Icons.edit)),
+            IconButton(
+                onPressed: () {
+                  context.read<AuthService>().logoutUser();
                   Navigator.popAndPushNamed(context, '/');
                 },
                 icon: const Icon(Icons.logout))
@@ -59,16 +65,11 @@ class _ChatPageState extends State<ChatPage> {
         ),
         body: Column(
           children: [
-            
             Expanded(
               child: ListView.builder(
                   itemCount: _messages.length,
                   itemBuilder: (context, index) {
-                    return ChatBubble(
-                        alignment: _messages[index].author.username == 'Sushant'
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        messageEntity: _messages[index]);
+                    return ChatBubble(messageEntity: _messages[index]);
                   }),
             ),
             ChatInput(

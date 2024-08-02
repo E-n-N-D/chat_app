@@ -1,10 +1,15 @@
 import 'package:chat_app/chat_page.dart';
 import 'package:chat_app/login_page.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/utils/brand_color.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const ChatApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AuthService.init();
+  runApp(ChangeNotifierProvider(
+      create: (BuildContext context) => AuthService(), child: ChatApp()));
 }
 
 class ChatApp extends StatelessWidget {
@@ -18,7 +23,33 @@ class ChatApp extends StatelessWidget {
             primarySwatch: BrandColor.primaryColor,
             appBarTheme: AppBarTheme(
                 backgroundColor: Colors.blue, foregroundColor: Colors.black)),
-        home: LoginPage(),
-        routes: {'chat': (context) => ChatPage()});
+        home: FutureBuilder<bool>(
+            future: context.watch<AuthService>().isLoggedIn(),
+            builder: (context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData && snapshot.data!) {
+                  print("Main page ${snapshot.data}");
+                  return ChatPage();
+                } else {
+                  return LoginPage();
+                }
+              }
+              return CircularProgressIndicator();
+            }),
+        routes: {
+          'chat': (context) => FutureBuilder<bool>(
+              future: context.watch<AuthService>().isLoggedIn(),
+              builder: (context, AsyncSnapshot<bool> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData && snapshot.data!) {
+                    return ChatPage();
+                  } else {
+                    Navigator.maybePop(context);
+                    Navigator.pushNamed(context, '/');
+                  }
+                }
+                return CircularProgressIndicator();
+              }),
+        });
   }
 }
