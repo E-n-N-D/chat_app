@@ -34,6 +34,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {});
   }
 
+
   @override
   void initState() {
     _loadInitialMessages();
@@ -58,6 +59,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
         body: Column(
           children: [
+            
             Expanded(
               child: ListView.builder(
                   itemCount: _messages.length,

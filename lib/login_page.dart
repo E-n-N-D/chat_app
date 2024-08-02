@@ -51,7 +51,17 @@ class LoginPage extends StatelessWidget {
                     fontSize: 20,
                     color: Colors.blueGrey),
               ),
-              Image.asset('assets/banner_image.png', height: 100),
+              verticalSpacing(15),
+              Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      image: AssetImage('assets/banner_image.png'),
+                    ),
+                    borderRadius: BorderRadius.circular(24)),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -122,8 +132,10 @@ class LoginPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SocialMediaButton.github(url:url),
-                  SocialMediaButton.linkedin(url:'https://www.linkedin.com/in/sushant-adhikari-684647206/')
+                  SocialMediaButton.github(url: url),
+                  SocialMediaButton.linkedin(
+                      url:
+                          'https://www.linkedin.com/in/sushant-adhikari-684647206/')
                 ],
               )
             ],
